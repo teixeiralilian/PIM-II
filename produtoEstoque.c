@@ -1,0 +1,96 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_PRODUTOS 100
+
+typedef struct {
+    int idProduto;
+    char nome[50];
+    char tamanho[3]; //ex: P, GG, 42, 38...
+    float preco;
+    int emEstoque;
+    int estoqueMin;
+    int estoqueMax;
+} Produto;
+
+Produto produtos[MAX_PRODUTOS];
+
+int totalProdutos = 0;
+
+//carrega informações de produtos.txt em Produto produtos[] (caso tenha info)
+void carregaProduto() {
+
+    FILE *fp = fopen("produtos.txt", "r");
+
+    if (fp == NULL) {  
+        return;
+    }
+    while (totalProdutos < MAX_PRODUTOS &&
+           fscanf(fp, " %49[^;];%[^;];%f;%d;%d;%d", //lê (tamanho do array de char - 1) caracteres para ter espaço pro \0
+                  produtos[totalProdutos].nome,
+                  produtos[totalProdutos].tamanho,
+                  &produtos[totalProdutos].preco,
+                  &produtos[totalProdutos].emEstoque,
+                  &produtos[totalProdutos].estoqueMin,
+                  &produtos[totalProdutos].estoqueMax) == 6) {
+        totalProdutos++;
+    }
+    fclose(fp);
+}
+
+//salva dados de Produto produtos[] em produtos.txt
+void salvaProduto() {
+    FILE *fp = fopen("produtos.txt", "w"); //reescreve o arquivo todo
+    int i;
+
+    if (fp == NULL) {
+        printf("Não foi possível salvar.\n");
+        return;
+    }
+    for (i = 0; i < totalProdutos; i++) {
+        fprintf(fp, "%s;%s;%.2f;%d;%d;%d\n",
+                produtos[i].nome, produtos[i].tamanho, produtos[i].preco,
+                produtos[i].emEstoque, produtos[i].estoqueMin, produtos[i].estoqueMax);
+    }
+    fclose(fp);
+}
+
+//recebe info de um produto (fazer função reestoque!!)
+void cadastraProduto() {
+    printf("\nNome: ");
+    fgets(produtos[totalProdutos].nome, sizeof(produtos[totalProdutos].nome),stdin);
+    printf("\nTamanho: ");
+    scanf("%2s", produtos[totalProdutos].tamanho);
+    printf("\nPreço: ");
+    scanf("%f", &produtos[totalProdutos].preco);
+    printf("\nQuantidade: ");
+    scanf("%d", &produtos[totalProdutos].emEstoque);
+    printf("\nEstoque mínimo: ");
+    scanf("%d", &produtos[totalProdutos].estoqueMin);
+    printf("\nEstoque máximo: ");
+    scanf("%d", &produtos[totalProdutos].estoqueMax);
+    totalProdutos++; //passa para o próximo índice do vetor
+}
+
+//imprime informações dos produtos em Produto produtos[]
+void verificaEstoque() {
+    int i = 0;
+
+    FILE *fp = fopen("produtos.txt", "r");
+    
+    if (fp == NULL) {
+        printf("Não foi possível acessar o estoque.\n");
+        return;
+    }
+    if (totalProdutos == 0) {
+        printf("Nenhum produto catalogado.\n");
+        return;
+    }
+    for (i = 0; i < totalProdutos; i++) {
+        printf("%-5d %-20s %-6s %9.2f %5d %5d %5d\n", i + 1, produtos[i].nome,
+        produtos[i].tamanho, produtos[i].preco, produtos[i].emEstoque,
+        produtos[i].estoqueMin, produtos[i].estoqueMax);
+    }
+
+}
