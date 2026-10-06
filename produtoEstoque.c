@@ -23,19 +23,21 @@ void carregaProduto() {
 
     FILE *fp = fopen("produtos.txt", "r");
 
-    if (fp == NULL) {  
+    if (fp == NULL) {
+        printf("Não foi possível carregar o arquivo.");
         return;
     }
     while (totalProdutos < MAX_PRODUTOS &&
-           fscanf(fp, " %49[^;];%[^;];%f;%d;%d;%d", //lê (tamanho do array de char - 1) caracteres para ter espaço pro \0
-                  produtos[totalProdutos].nome,
-                  produtos[totalProdutos].tamanho,
-                  &produtos[totalProdutos].preco,
-                  &produtos[totalProdutos].emEstoque,
-                  &produtos[totalProdutos].estoqueMin,
-                  &produtos[totalProdutos].estoqueMax) == 6) {
-        totalProdutos++;
-    }
+        fscanf(fp, " %49[^;];%2[^;];%f;%d;%d;%d", //lê (tamanho do array de char - 1) caracteres para ter espaço pro \0
+            produtos[totalProdutos].nome,
+            produtos[totalProdutos].tamanho,
+            &produtos[totalProdutos].preco,
+            &produtos[totalProdutos].emEstoque,
+            &produtos[totalProdutos].estoqueMin,
+            &produtos[totalProdutos].estoqueMax) == 6) {
+            produtos[totalProdutos].idProduto = totalProdutos + 1;
+            totalProdutos++;
+        }
     fclose(fp);
 }
 
@@ -87,10 +89,13 @@ void verificaEstoque() {
         printf("Nenhum produto catalogado.\n");
         return;
     }
+    printf("\n%-5s %-20s %-6s %9s %9s %10s %10s\n",
+        "ID", "Nome", "Tamanho", "Preço", "Estoque", "Mín", "Máx");
     for (i = 0; i < totalProdutos; i++) {
-        printf("%-5d %-20s %-6s %9.2f %5d %5d %5d\n", i + 1, produtos[i].nome,
+        printf("%-5d %-20s %-6s %9.2f %9d %9d %9d\n", i + 1, produtos[i].nome,
         produtos[i].tamanho, produtos[i].preco, produtos[i].emEstoque,
         produtos[i].estoqueMin, produtos[i].estoqueMax);
     }
-
+    
+    fclose(fp);
 }
