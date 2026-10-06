@@ -3,6 +3,7 @@
 #include <string.h>
 
 #define MAX_PRODUTOS 100
+#define MAX_VENDEDORES 10
 
 typedef struct {
     int idProduto;
@@ -14,9 +15,18 @@ typedef struct {
     int estoqueMax;
 } Produto;
 
+typedef struct {
+    int idVendedor;
+    char cpf[12];
+    char nome[50];
+    char telefone[12];
+} Vendedor;
+
 Produto produtos[MAX_PRODUTOS];
+Vendedor vendedores[MAX_VENDEDORES];
 
 int totalProdutos = 0;
+int totalVendedores = 0;
 
 //carrega informações de produtos.txt em Produto produtos[] (caso tenha info)
 void carregaProduto() {
@@ -58,7 +68,7 @@ void salvaProduto() {
     fclose(fp);
 }
 
-//recebe info de um produto (fazer função reestoque!!)
+//recebe info de um produto
 void cadastraProduto() {
     printf("\nNome: ");
     fgets(produtos[totalProdutos].nome, sizeof(produtos[totalProdutos].nome),stdin);
@@ -72,19 +82,22 @@ void cadastraProduto() {
     scanf("%d", &produtos[totalProdutos].estoqueMin);
     printf("\nEstoque máximo: ");
     scanf("%d", &produtos[totalProdutos].estoqueMax);
-    totalProdutos++; //passa para o próximo índice do vetor
+    totalProdutos++;
+}
+
+//verifica estoque mínimo
+void avisoEstoque() {
+    for (int i = 0; i < totalProdutos; i++) {
+        if (produtos[i].emEstoque <= produtos[i].estoqueMin) {
+            printf("=======Estoque mínimo atingido! Hora de reestocar %s!=======\n", produtos[i].nome);
+        }
+    }
 }
 
 //imprime informações dos produtos em Produto produtos[]
-void verificaEstoque() {
+void mostraEstoque() {
     int i = 0;
 
-    FILE *fp = fopen("produtos.txt", "r");
-    
-    if (fp == NULL) {
-        printf("Não foi possível acessar o estoque.\n");
-        return;
-    }
     if (totalProdutos == 0) {
         printf("Nenhum produto catalogado.\n");
         return;
@@ -96,6 +109,68 @@ void verificaEstoque() {
         produtos[i].tamanho, produtos[i].preco, produtos[i].emEstoque,
         produtos[i].estoqueMin, produtos[i].estoqueMax);
     }
-    
+    avisoEstoque();
+}
+
+//carrega info de vendedores.txt
+void carregaVendedor() {
+
+    FILE *fp = fopen("vendedores.txt", "r");
+
+    if (fp == NULL) {
+        printf("Não foi possível carregar o arquivo.");
+        return;
+    }
+    while (totalVendedores < MAX_VENDEDORES &&
+        fscanf(fp, " %49[^;];%11[^;];%11[^;\r\n]",
+            vendedores[totalVendedores].nome,
+            vendedores[totalVendedores].cpf,
+            vendedores[totalVendedores].telefone) == 3) {
+            vendedores[totalVendedores].idVendedor = totalVendedores + 1;
+            totalVendedores++;
+        }
     fclose(fp);
+}
+
+//cadastra vendedor
+void cadastraVendedor() {
+    printf("\nNome: ");
+    scanf(" %49[^\n]", vendedores[totalVendedores].nome);
+    printf("\nCPF: ");
+    scanf(" %11[^\n]", vendedores[totalVendedores].cpf);
+    printf("\nTelefone: ");
+    scanf(" %11[^\n]", vendedores[totalVendedores].telefone);
+    totalVendedores++;
+}
+
+//salva dados de vendedores[] em vendedores.txt
+void salvaVendedor() {
+    FILE *fp = fopen("vendedores.txt", "w");
+    int i;
+
+    if (fp == NULL) {
+        printf("Não foi possível salvar.\n");
+        return;
+    }
+    for (i = 0; i < totalVendedores; i++) {
+        fprintf(fp, "%s;%s;%s\n",
+                vendedores[i].nome, vendedores[i].cpf, vendedores[i].telefone);
+    }
+    fclose(fp);
+}
+
+//imprime vendedores registrados em vendedores.txt
+void mostraVendedor() {
+    int i = 0;
+
+    if (totalVendedores == 0) {
+        printf("Nenhum vendedor catalogado.\n");
+        return;
+    }
+    printf("\n%-5s %-30s %-20s %s\n",
+        "ID", "Nome", "CPF", "Telefone");
+    for (i = 0; i < totalVendedores; i++) {
+        printf("%-5d %-30s %-20s %s\n", i + 1,
+        vendedores[i].nome, vendedores[i].cpf, vendedores[i].telefone);
+    }
 }
