@@ -1,0 +1,6 @@
+Ana Souza;Camiseta Básica;2;79,80;10/10/2026
+Bruno L;Calça Jeans;1;119,90;11/10/2026
+Ana Souza;Moletom;1;159,99;12/10/2026
+Carla Mendes;Meia Esportiva;3;28,50;13/10/2026
+Administrador Geral;Vestido Floral;3;269,70;16/10/2026
+Ana Souza;Camiseta Básica;4;159,60;12/12/2026
