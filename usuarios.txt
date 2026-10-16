@@ -1,3 +1,6 @@
-Administrador Geral;admin;123456;1
-Alfredo Lopes;lopes;2345;2
-Alice Silva;silva;3456;3
+Administrador Geral;admin;123456;1;00000000000;1
+Ana Souza;ana;senha123;3;11987654321;1
+Bruno L;bruno;vendedor123;3;11912345678;1
+Carla Mendes;carla;carla123;3;11999887766;1
+Marcos Oliveira;marcos;gerente123;2;11988776655;1
+Vendedor Arquivado;arquivado;teste123;3;11000000000;0
