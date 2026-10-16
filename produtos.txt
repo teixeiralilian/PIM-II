@@ -1,0 +1,6 @@
+Camiseta Básica;M;39,90;25;5;50;1
+Camiseta Básica;G;39,90;8;5;50;1
+Calça Jeans;42;119,90;8;3;20;1
+Moletom;G;159,99;4;2;10;1
+Meia Esportiva;Único;9,50;0;10;40;1
+Vestido Floral;M;89,90;4;2;15;1
